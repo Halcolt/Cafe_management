@@ -1,0 +1,4 @@
+ID,AccountName,username,Passwords,permission,tel,email,identity,usual_schedule,hour_payment
+1,"Trinh Phu Quang",Admin,1,1,912738037,quang.tp205219@sis.hust.edu.vn,NULL,"wed 8-10",0
+2,"Trinh Huu Trong",Quang,101010,2,989969999,,NULL,"wed 8-10",20
+3,"Le Huu Tai",Bill,121212,3,523585592,,NULL,"wed 8-10",20

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cafe_management.CheckStockController">
+    <children>
+        <Label layoutX="65.0" layoutY="39.0" text="Trong kho:">
+            <font>
+                <Font size="30.0" />
+            </font></Label>
+        <Label fx:id="StockLabel" layoutX="15.0" layoutY="118.0" prefHeight="154.0" prefWidth="769.0" />
+    </children>
+</AnchorPane>

@@ -16,6 +16,6 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Button fx:id="CreateAccButton" layoutX="439.0" layoutY="177.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="118.0" text="Tạo tài khoản mới" />
+      <Button fx:id="CreateAccountButton" layoutX="439.0" layoutY="177.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="118.0" text="Tạo tài khoản mới" />
     </children>
 </AnchorPane>

@@ -13,48 +13,29 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckStockController {
-
-    @FXML
-    private AnchorPane rootPane;
-
-    @FXML
-    private Label itemNameLabel;
+public class ImportController {
 
     @FXML
     private ComboBox<String> ItemComboBox;
 
     @FXML
-    private TextField old_amountTextfield;
+    private TextField unitTextfield;
+
+    @FXML
+    private TextField amountTextField;
 
     @FXML
     private ListView<String> cartListView;
 
     @FXML
-    private ComboBox<String> unitComboBox;
-
-    @FXML
-    private TextField unitTextfield;
-
-    @FXML
-    private TextField new_amountTextfield;
-
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button backButton;
+    private TextField PriceTextField;
 
     private Connection connection;
+    private String username;
 
     private PreparedStatement fetchAmountStatement;
     private PreparedStatement updateStatement;
     private PreparedStatement insertStatement;
-
-    private String unit;
 
     @FXML
     private void initialize() {
@@ -67,6 +48,8 @@ public class CheckStockController {
             e.printStackTrace();
         }
 
+        // Get the username (You need to replace this with your actual way of getting the username)
+        username = LoginController.loggedInUserData.getUsername();
     }
 
     private void setupComboBox() {
@@ -77,27 +60,8 @@ public class CheckStockController {
             if (newValue != null) {
                 String unit = fetchUnitForItem(newValue);
                 unitTextfield.setText(unit);
-
-                // Fetch and display the amount from the stock table
-                float stockAmount = fetchAmountForItem(newValue);
-                old_amountTextfield.setText(String.valueOf(stockAmount));
             }
         });
-    }
-
-    // Add this method to fetch the amount for the selected item
-    private float fetchAmountForItem(String item) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT amount FROM stock WHERE ingredient = ?")) {
-            statement.setString(1, item);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet.getFloat("amount");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0.0f; // Default value if not found
     }
 
     private List<String> fetchIngredientStock() {
@@ -139,12 +103,12 @@ public class CheckStockController {
     @FXML
     private void AddToCart() {
         String selectedItem = ItemComboBox.getValue();
-        unit = unitTextfield.getText();
-        float oldAmount = Float.parseFloat(old_amountTextfield.getText());
-        float newAmount = Float.parseFloat(new_amountTextfield.getText());
+        String unit = unitTextfield.getText();
+        float quantity = Float.parseFloat(amountTextField.getText());
+        int price = Integer.parseInt(PriceTextField.getText());
 
-        if (selectedItem != null && !selectedItem.isEmpty() && oldAmount >= 0 && newAmount >= 0) {
-            String cartItem = selectedItem + " - Old Amount: " + oldAmount + " " + unit + " - New Amount: " + newAmount + " " + unit;
+        if (selectedItem != null && !selectedItem.isEmpty() && quantity > 0 && price > 0) {
+            String cartItem = selectedItem + " - " + quantity + " " + unit + " - Price: " + price;
             cartListView.getItems().add(cartItem);
             clearInputFields();
         } else {
@@ -152,17 +116,18 @@ public class CheckStockController {
         }
     }
 
+
     private void clearInputFields() {
         ItemComboBox.setValue(null);
         unitTextfield.clear();
-        old_amountTextfield.clear();
-        new_amountTextfield.clear();
+        amountTextField.clear();
+        PriceTextField.clear();
     }
 
     private void showInputErrorAlert() {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setTitle("Lỗi");
-        errorAlert.setContentText("Vui lòng điền đầy đủ thông tin.");
+        errorAlert.setContentText("Vui lòng điền đầy đủ thông tin nhập hàng");
         errorAlert.showAndWait();
     }
 
@@ -171,8 +136,6 @@ public class CheckStockController {
         int selectedIndex = cartListView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             cartListView.getItems().remove(selectedIndex);
-        } else {
-            showNoItemSelectedAlert();
         }
     }
 
@@ -190,62 +153,86 @@ public class CheckStockController {
         java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
         java.sql.Time sqlTime = new java.sql.Time(currentDate.getTime());
 
-        String username = LoginController.loggedInUserData.getUsername();
-
         for (String cartItem : cartListView.getItems()) {
             String[] parts = cartItem.split(" - ");
             if (parts.length == 3) {
                 String ingredient = parts[0];
-                String oldAmountStr = parts[1].replace("Old Amount: ", "").split(" ")[0];
-                String newAmountStr = parts[2].replace("New Amount: ", "").split(" ")[0];
-                float oldAmount = Float.parseFloat(oldAmountStr);
-                float newAmount = Float.parseFloat(newAmountStr);
-
-                // Insert into stock_change with quantity as NULL and price as 0
-                insertStockChange(username, sqlDate, sqlTime, ingredient, unit, oldAmount, newAmount);
-
-                // Update the amount in the stock table
-                updateStockTable(ingredient, newAmount);
+                String quantityUnit = parts[1];
+                String price = parts[2].replace("Price: ", "");
+                String[] quantityParts = quantityUnit.split(" ");
+                if (quantityParts.length == 2) {
+                    String unit = quantityParts[1];
+                    float quantity = Float.parseFloat(quantityParts[0]);
+                    float currentAmount = fetchCurrentAmount(ingredient);
+                    float newAmount = currentAmount + quantity;
+                    updateStockTable(ingredient,  newAmount);
+                    insertStockChange(username, sqlDate, sqlTime, ingredient, unit, quantity, price, currentAmount, newAmount);
+                }
             }
         }
         cartListView.getItems().clear();
         showConfirmationAlert();
     }
 
-    // Define the insertStockChange method to insert data into stock_change table
-    private void insertStockChange(String username, java.sql.Date date, java.sql.Time time, String ingredient, String unit, float oldAmount, float newAmount) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO stock_change (username, changedate, changetime, ingredient, unit, old_amount, new_amount, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, username);
-            statement.setDate(2, date);
-            statement.setTime(3, time);
-            statement.setString(4, ingredient);
-            statement.setString(5, unit);
-            statement.setFloat(6, oldAmount);
-            statement.setFloat(7, newAmount);
-            statement.setFloat(8, 0);
-            statement.setFloat(9, 0);
-            statement.executeUpdate();
+    private void updateStockTable(String ingredient,  float newAmount) {
+        String updateSql = "UPDATE stock SET amount = ? WHERE ingredient = ?";
+        try {
+            updateStatement = connection.prepareStatement(updateSql);
+            updateStatement.setFloat(1, newAmount);
+            updateStatement.setString(2, ingredient);
+            updateStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Define the updateStockTable method to update the amount in the stock table
-    private void updateStockTable(String ingredient, float newAmount) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE stock SET amount = ? WHERE ingredient = ?")) {
-            statement.setFloat(1, newAmount);
-            statement.setString(2, ingredient);
-            statement.executeUpdate();
+    private float fetchCurrentAmount(String ingredient) {
+        float currentAmount = 0;
+        try {
+            fetchAmountStatement = connection.prepareStatement("SELECT amount FROM stock WHERE ingredient = ?");
+            fetchAmountStatement.setString(1, ingredient);
+            ResultSet amountResultSet = fetchAmountStatement.executeQuery();
+            if (amountResultSet.next()) {
+                currentAmount = amountResultSet.getFloat("amount");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return currentAmount;
+    }
+
+    private void insertStockChange(String username, java.sql.Date changeDate, java.sql.Time changeTime, String ingredient, String unit, float quantity, String price, float currentAmount, float newAmount) {
+        String insertSql = "INSERT INTO stock_change (username, changedate, changetime, ingredient, unit, old_amount, new_amount, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            insertStatement = connection.prepareStatement(insertSql);
+            insertStatement.setString(1, username);
+            insertStatement.setDate(2, changeDate);
+            insertStatement.setTime(3, changeTime);
+            insertStatement.setString(4, ingredient);
+            insertStatement.setString(5, unit);
+            insertStatement.setFloat(6, currentAmount);
+            insertStatement.setFloat(7, newAmount);
+            insertStatement.setFloat(8, quantity);
+            insertStatement.setFloat(9, Float.parseFloat(price));
+            insertStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private void showConfirmationAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Xác nhận");
-        alert.setHeaderText(null);
-        alert.setContentText("Cập nhật kho hàng thành công.");
-        alert.showAndWait();
+        Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
+        confirmationAlert.setTitle("Xác nhận");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Nhập hàng đã được xác nhận và cập nhật.");
+        confirmationAlert.showAndWait();
+    }
+
+    private void showUsernameErrorAlert() {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setTitle("Lỗi");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText("Không thể xác định tên người dùng.");
+        errorAlert.showAndWait();
     }
 }

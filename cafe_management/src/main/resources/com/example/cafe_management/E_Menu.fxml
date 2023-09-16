@@ -8,17 +8,16 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cafe_management.E_MenuController">
    <children>
       <Button fx:id="PersonalInfo" layoutX="56.0" layoutY="133.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Thông tin tài khoản" />
-      <Button fx:id="Importing" layoutX="50.0" layoutY="224.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="145.0" text="Nhập hàng" />
-      <Button fx:id="CreateOrder" layoutX="428.0" layoutY="133.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Tạo đơn hàng" />
-      <Button fx:id="CheckStock" layoutX="245.0" layoutY="224.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Kiểm tra kho" />
-      <Button fx:id="Statistic" layoutX="428.0" layoutY="224.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Thống kê" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="197.0" layoutY="51.0" prefHeight="50.0" prefWidth="206.0" text="Tùy chọn">
+      <Button fx:id="Importing" layoutX="421.0" layoutY="133.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="141.0" text="Nhập hàng" />
+      <Button fx:id="CreateOrder" layoutX="245.0" layoutY="133.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Tạo đơn hàng" />
+      <Button fx:id="CheckStock" layoutX="151.0" layoutY="224.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Kiểm tra kho" />
+      <Button fx:id="Statistic" layoutX="336.0" layoutY="224.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Thống kê" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="209.0" layoutY="51.0" prefHeight="50.0" prefWidth="206.0" text="Tùy chọn">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <Button fx:id="Logout" layoutX="515.0" layoutY="360.0" mnemonicParsing="false" text="Đăng xuất" />
-      <Button layoutX="245.0" layoutY="133.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="134.0" text="Tạo tài khoản" />
 
    </children>
 </AnchorPane>

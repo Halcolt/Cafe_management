@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
@@ -27,6 +28,9 @@ public class ChooseUserController {
 
     @FXML
     private Button chooseButton;
+
+    @FXML
+    private Button CreateAccountButton;
 
     @FXML
     private void initialize() {
@@ -67,6 +71,35 @@ public class ChooseUserController {
                 loadInformationScene(selectedUserInfo.getAccountName());
             }
         });
+
+        CreateAccountButton.setOnAction(event -> {
+            // Load the Create Account scene
+            int currentperrmission = LoginController.loggedInUserData.getPermission();
+            if (currentperrmission  < 4){
+                loadCreateAccountScene();
+            } else {
+                Alert loginFailAlert = new Alert(Alert.AlertType.ERROR);
+                loginFailAlert.setTitle("No Permission");
+                loginFailAlert.setContentText("Tài khoản không thể dùng chức năng này");
+                loginFailAlert.showAndWait();
+            }
+        });
+    }
+
+    private void loadCreateAccountScene() {
+        try {
+            // Load the Create Account scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CreateAccount.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+
+            // Get the current window and set the scene
+            Stage stage = (Stage) CreateAccountButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadEMenuScene() {
@@ -148,23 +181,14 @@ public class ChooseUserController {
             return accountName;
         }
 
-        public int getPermission() {
-            return permission;
-        }
-
         public String getPermissionLabel() {
-            switch (permission) {
-                case 1:
-                    return "Admin";
-                case 2:
-                    return "CEO";
-                case 3:
-                    return "Manager";
-                case 4:
-                    return "Employee";
-                default:
-                    return "Unknown";
-            }
+            return switch (permission) {
+                case 1 -> "Admin";
+                case 2 -> "CEO";
+                case 3 -> "Manager";
+                case 4 -> "Employee";
+                default -> "Unknown";
+            };
         }
     }
 }

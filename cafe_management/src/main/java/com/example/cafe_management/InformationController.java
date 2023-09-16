@@ -58,8 +58,7 @@ public class InformationController {
     private void loadUserInfo() {
         // Connect to the database using DatabaseUtil
         Connection connection = null;
-        try {
-            connection = DatabaseUtil.connect();
+        try {connection = DatabaseUtil.connect();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

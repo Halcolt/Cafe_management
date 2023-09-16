@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cafe_management.InformationController">
-    <children>
-        <Label layoutX="156.0" layoutY="17.0" text="Tạo tài khoản">
-            <font>
-                <Font size="30.0" />
-            </font></Label>
-        <Label layoutX="60.0" layoutY="213.0" prefHeight="26.0" prefWidth="94.0" text="Tên người dùng" />
-        <TextField fx:id="AccountNameTextField" editable="false" layoutX="167.0" layoutY="213.0" prefHeight="26.0" prefWidth="210.0" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cafe_management.CreateAccountController">
+    <Label layoutX="156.0" layoutY="17.0" text="Tạo tài khoản">
+        <font>
+            <Font size="30.0" />
+        </font>
+    </Label>
+    <TextField fx:id="UsernameTextField" layoutX="167.0" layoutY="111.0" prefHeight="26.0" prefWidth="210.0" />
+    <Text layoutX="63.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tên tài khoản(*)" />
 
-        <Label layoutX="63.0" layoutY="161.0" text="Mật khẩu" />
-        <TextField fx:id="PasswordsTextField" layoutX="167.0" layoutY="157.0" prefHeight="26.0" prefWidth="210.0" />
+    <Label layoutX="63.0" layoutY="161.0" text="Mật khẩu(*)" />
+    <TextField fx:id="PasswordsTextField" layoutX="167.0" layoutY="157.0" prefHeight="26.0" prefWidth="210.0" />
 
-        <Label layoutX="60.0" layoutY="265.0" text="Chức danh" />
-        <TextField fx:id="permissionTextField" editable="false" layoutX="167.0" layoutY="261.0" prefHeight="26.0" prefWidth="210.0" />
+    <Label layoutX="57.0" layoutY="213.0" prefHeight="26.0" prefWidth="117.0" text="Tên người dùng(*)" />
+    <TextField fx:id="AccountNameTextField" layoutX="167.0" layoutY="213.0" prefHeight="26.0" prefWidth="210.0" />
 
-        <Label layoutX="61.0" layoutY="316.0" text="Điện thoại" />
-        <TextField fx:id="telTextField" layoutX="167.0" layoutY="311.0" prefHeight="26.0" prefWidth="210.0" />
+    <Label layoutX="60.0" layoutY="265.0" text="Chức danh(*)" />
 
-        <Label layoutX="64.0" layoutY="366.0" text="Email" />
-        <TextField fx:id="emailTextField" layoutX="167.0" layoutY="362.0" prefHeight="26.0" prefWidth="210.0" />
+    <ComboBox fx:id="permissionComboBox" layoutX="167.0" layoutY="261.0" prefHeight="26.0" prefWidth="210.0">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+            </FXCollections>
+        </items>
+    </ComboBox>
 
-        <Label layoutX="455.0" layoutY="266.0" text="CCCD" />
-        <TextField fx:id="identityTextField" layoutX="552.0" layoutY="262.0" prefHeight="26.0" prefWidth="210.0" />
 
-        <Label layoutX="454.0" layoutY="316.0" text="Giờ làm việc" />
-        <TextField fx:id="usual_scheduleTextField" layoutX="552.0" layoutY="312.0" prefHeight="26.0" prefWidth="210.0" />
+    <Label layoutX="61.0" layoutY="316.0" text="Điện thoại" />
+    <TextField fx:id="telTextField" layoutX="167.0" layoutY="311.0" prefHeight="26.0" prefWidth="210.0" />
 
-        <Label layoutX="455.0" layoutY="365.0" text="Lương theo giờ" />
-        <TextField fx:id="hour_paymentTextField" layoutX="552.0" layoutY="361.0" prefHeight="26.0" prefWidth="210.0" />
+    <Label layoutX="64.0" layoutY="366.0" text="Email" />
+    <TextField fx:id="emailTextField" layoutX="167.0" layoutY="362.0" prefHeight="26.0" prefWidth="210.0" />
 
-        <Button fx:id="return_button" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Quay lại" />
-        <Button fx:id="info_modify" layoutX="700.0" layoutY="453.0" mnemonicParsing="false" text="Thay Đổi" />
-      <TextField layoutX="167.0" layoutY="111.0" prefHeight="26.0" prefWidth="210.0" />
-      <Text fx:id="UsernameTextField" layoutX="63.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tên tài khoản" />
-    </children>
+    <Label layoutX="455.0" layoutY="266.0" text="CCCD" />
+    <TextField fx:id="identityTextField" layoutX="552.0" layoutY="262.0" prefHeight="26.0" prefWidth="210.0" />
+
+    <Label layoutX="454.0" layoutY="316.0" text="Giờ làm việc" />
+    <TextField fx:id="usual_scheduleTextField" layoutX="552.0" layoutY="312.0" prefHeight="26.0" prefWidth="210.0" />
+
+    <Label layoutX="455.0" layoutY="365.0" text="Lương theo giờ(*)" />
+    <TextField fx:id="hour_paymentTextField" layoutX="552.0" layoutY="361.0" prefHeight="26.0" prefWidth="210.0" />
+
+    <Button fx:id="return_button" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#returnToPreviousScene" text="Quay lại" />
+    <Button fx:id="CreateAcc" layoutX="700.0" layoutY="453.0" mnemonicParsing="false" onAction="#createAccountButtonClicked" text="Tạo tài khoản" />
+
 </AnchorPane>

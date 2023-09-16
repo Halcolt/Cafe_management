@@ -27,24 +27,14 @@ public class DatabaseUtil {
                     String value = parts[1].trim();
 
                     switch (key) {
-                        case "db.hostname":
-                            hostname = value;
-                            break;
-                        case "db.port":
-                            port = Integer.parseInt(value);
-                            break;
-                        case "db.database":
-                            database = value;
-                            break;
-                        case "db.username":
-                            username = value;
-                            break;
-                        case "db.password":
-                            password = value;
-                            break;
-                        default:
-                            // Unknown configuration key, ignore or handle as needed
-                            break;
+                        case "db.hostname" -> hostname = value;
+                        case "db.port" -> port = Integer.parseInt(value);
+                        case "db.database" -> database = value;
+                        case "db.username" -> username = value;
+                        case "db.password" -> password = value;
+                        default -> {
+                        }
+                        // Unknown configuration key, ignore or handle as needed
                     }
                 }
             }

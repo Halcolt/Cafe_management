@@ -137,7 +137,6 @@ public class CreateOrderController {
 
     private int calculateTotalPrice(String item, int amount) {
         int totalPrice = 0;
-
         try {
             String sql = "SELECT price FROM menu WHERE item = ?";
 

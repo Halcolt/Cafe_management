@@ -2,7 +2,12 @@ package com.example.cafe_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -172,6 +177,28 @@ public class ImportController {
         }
         cartListView.getItems().clear();
         showConfirmationAlert();
+    }
+
+    @FXML
+    private void NewMaterial(ActionEvent event) throws IOException {
+        int currentperrmision = LoginController.loggedInUserData.getPermission();
+        // Load the NewMaterial.fxml file and create a new stage for it
+        if (currentperrmision < 4) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("NewMaterial.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Mặt hàng mới");
+            stage.setScene(new Scene(root));
+
+            stage.show();
+        } else {
+            Alert NoPermission = new Alert(Alert.AlertType.ERROR);
+            NoPermission.setTitle("No Permission");
+            NoPermission.setContentText("Tài khoản không thể dùng chức năng này");
+            NoPermission.showAndWait();
+        }
+
+
     }
 
     private void updateStockTable(String ingredient,  float newAmount) {

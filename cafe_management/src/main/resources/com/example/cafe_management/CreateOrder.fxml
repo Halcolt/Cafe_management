@@ -19,10 +19,11 @@
         <ComboBox fx:id="itemComboBox" layoutX="149.0" layoutY="107.0" prefWidth="200.0" />
         <Label layoutX="35.0" layoutY="155.0" text="Amount:" />
         <TextField fx:id="amountTextField" layoutX="149.0" layoutY="151.0" prefWidth="60.0" />
-        <Button fx:id="addToCartButton" layoutX="149.0" layoutY="207.0" mnemonicParsing="false" onAction="#addToCartButtonClicked" text="Add to Cart" />
         <ListView fx:id="cartListView" layoutX="378.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" />
         <Label layoutX="388.0" layoutY="315.0" text="Total Price (dong):" />
         <Label fx:id="totalPriceLabel" layoutX="492.0" layoutY="315.0" text="0" />
+
+        <Button fx:id="addToCartButton" layoutX="149.0" layoutY="207.0" mnemonicParsing="false" onAction="#addToCartButtonClicked" text="Add to Cart" />
         <Button layoutX="478.0" layoutY="345.0" mnemonicParsing="false" onAction="#createOrderButtonClicked" text="Create Order" />
         <Button layoutX="25.0" layoutY="22.0" mnemonicParsing="false" onAction="#returnButtonClicked" text="Return" />
       <Button fx:id="deleteButton" layoutX="521.0" layoutY="65.0" mnemonicParsing="false" text="Delete" />

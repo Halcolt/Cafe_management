@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -30,6 +31,12 @@ public class E_MenuController {
     private Button Logout;
 
     @FXML
+    private Button EditMenu;
+
+    private int currentpermission = LoginController.loggedInUserData.getPermission();
+    private Stage currentStage;
+
+    @FXML
     private void initialize() {
         PersonalInfo.setOnAction(event -> {
             // Load the information scene
@@ -51,9 +58,22 @@ public class E_MenuController {
             loadScene("CheckStock.fxml");
         });
 
+        EditMenu.setOnAction(event -> {
+            if (currentpermission >= 4) {
+                showAlert();
+            } else {
+                // Load the edit menu scene
+                loadScene("EditMenu.fxml");
+            }
+        });
+
         Statistic.setOnAction(event -> {
-            // Load the statistic scene
-            loadScene("Statistic.fxml");
+            if (currentpermission >= 4) {
+                showAlert();
+            } else {
+                // Load the statistic scene
+                loadScene("Statistic.fxml");
+            }
         });
 
         Logout.setOnAction(event -> {
@@ -61,19 +81,30 @@ public class E_MenuController {
         });
     }
 
-
     private void loadScene(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            Stage stage = new Stage();
+            Stage newStage = new Stage();
 
-            stage.setScene(scene);
-            stage.show();
+            if (currentStage != null) {
+                // Close the current stage before opening the new one
+                currentStage.close();
+            }
+
+            currentStage = newStage; // Update the current stage reference
+            newStage.setScene(scene);
+            newStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void showAlert( ) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Không thể truy cập");
+        alert.setContentText("Người dùng không có quyền dùng chức năng này");
+        alert.showAndWait();
+    }
 }

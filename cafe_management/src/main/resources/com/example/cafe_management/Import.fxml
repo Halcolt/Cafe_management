@@ -24,8 +24,6 @@
    <TextField fx:id="amountTextField" layoutX="91.0" layoutY="152.0" prefHeight="26.0" prefWidth="78.0" />
 
    <ListView fx:id="cartListView" layoutX="338.0" layoutY="110.0" prefHeight="200.0" prefWidth="250.0" />
-   <Label layoutX="398.0" layoutY="325.0" text="Total Price (dong):" />
-   <Label  layoutX="502.0" layoutY="325.0" text="0" />
 
    <Text layoutX="202.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đơn vị:" />
    <TextField fx:id="unitTextfield" layoutX="245.0" layoutY="152.0" prefHeight="26.0" prefWidth="83.0" />
@@ -37,5 +35,5 @@
    <Button layoutX="517.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleConfirm" text="Xác nhận" />
    <Button layoutX="549.0" layoutY="77.0" mnemonicParsing="false" onAction="#handleDelete" text="Xóa" />
    <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnButtonClicked" text="Quay lại" />
-   <Button layoutX="25.0" layoutY="338.0" mnemonicParsing="false" text="Mặt hàng mới" />
+   <Button layoutX="25.0" layoutY="338.0" mnemonicParsing="false" onAction="#NewMaterial" text="Mặt hàng mới" />
 </AnchorPane>

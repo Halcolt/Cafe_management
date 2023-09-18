@@ -8,7 +8,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cafe_management.InformationController">
     <children>
-        <Label layoutX="156.0" layoutY="17.0" text="Tạo tài khoản">
+        <Label layoutX="156.0" layoutY="17.0" text="Thông tin tài khoản">
             <font>
                 <Font size="30.0" />
             </font></Label>

@@ -2,15 +2,8 @@ package com.example.cafe_management;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.sql.Connection;
 
 public class E_MenuController {
     @FXML
@@ -40,28 +33,26 @@ public class E_MenuController {
     }
 
     private int currentpermission = LoginController.loggedInUserData.getPermission();
-    private Stage currentStage;
-
     @FXML
     private void initialize() {
         PersonalInfo.setOnAction(event -> {
             // Load the information scene
-            loadScene("ChooseUser.fxml");
+            Main.loadScene("ChooseUser.fxml");
         });
 
         Importing.setOnAction(event -> {
             // Load the import scene
-            loadScene("Import.fxml");
+            Main.loadScene("Import.fxml");
         });
 
         CreateOrder.setOnAction(event -> {
             // Load the create order scene
-            loadScene("CreateOrder.fxml");
+            Main.loadScene("CreateOrder.fxml");
         });
 
         CheckStock.setOnAction(event -> {
             // Load the check stock scene
-            loadScene("CheckStock.fxml");
+            Main.loadScene("CheckStock.fxml");
         });
 
         EditMenu.setOnAction(event -> {
@@ -69,7 +60,7 @@ public class E_MenuController {
                 showAlert();
             } else {
                 // Load the edit menu scene
-                loadScene("EditMenu.fxml");
+                Main.loadScene("EditMenu.fxml");
             }
         });
 
@@ -78,39 +69,14 @@ public class E_MenuController {
                 showAlert();
             } else {
                 // Load the statistic scene
-                loadScene("Statistic.fxml");
+                Main.loadScene("Statistic.fxml");
             }
         });
 
-        Logout.setOnAction(event -> {
-            Platform.exit();
-        });
-    }
-
-    private void loadScene(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            Stage newStage = new Stage();
-
-            if (currentStage != null) {
-                // Close the current stage before opening the new one
-                currentStage.close();
-            }
-
-            currentStage = newStage; // Update the current stage reference
-            newStage.setScene(scene);
-            newStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Logout.setOnAction(event -> Platform.exit());
     }
 
     private void showAlert( ) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Không thể truy cập");
-        alert.setContentText("Người dùng không có quyền dùng chức năng này");
-        alert.showAndWait();
+        Main.ShowWarning("Người dùng không có quyền dùng chức năng này","Không thể truy cập");
     }
 }

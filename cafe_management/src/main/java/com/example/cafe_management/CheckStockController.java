@@ -3,23 +3,19 @@ package com.example.cafe_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CheckStockController {
-
-    @FXML
-    private AnchorPane rootPane;
-
-    @FXML
-    private Label itemNameLabel;
 
     @FXML
     private ComboBox<String> ItemComboBox;
@@ -31,28 +27,12 @@ public class CheckStockController {
     private ListView<String> cartListView;
 
     @FXML
-    private ComboBox<String> unitComboBox;
-
-    @FXML
     private TextField unitTextfield;
 
     @FXML
     private TextField new_amountTextfield;
 
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button backButton;
-
     private Connection connection;
-
-    private PreparedStatement fetchAmountStatement;
-    private PreparedStatement updateStatement;
-    private PreparedStatement insertStatement;
 
     private String unit;
 
@@ -132,8 +112,7 @@ public class CheckStockController {
 
     @FXML
     private void returnButtonClicked() {
-        Stage stage = (Stage) ItemComboBox.getScene().getWindow();
-        stage.close();
+        Main.loadScene("E_Menu.fxml");
     }
 
     @FXML
@@ -160,10 +139,7 @@ public class CheckStockController {
     }
 
     private void showInputErrorAlert() {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setTitle("Lỗi");
-        errorAlert.setContentText("Vui lòng điền đầy đủ thông tin.");
-        errorAlert.showAndWait();
+        Main.ShowWarning("Vui lòng điền đầy đủ thông tin","Lỗi");
     }
 
     @FXML
@@ -177,11 +153,7 @@ public class CheckStockController {
     }
 
     private void showNoItemSelectedAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Lỗi");
-        alert.setHeaderText(null);
-        alert.setContentText("Vui lòng chọn một mục để xóa.");
-        alert.showAndWait();
+        Main.ShowWarning("Vui lòng chọn một mục để xóa.","Lỗi");
     }
 
     @FXML
@@ -242,10 +214,6 @@ public class CheckStockController {
     }
 
     private void showConfirmationAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Xác nhận");
-        alert.setHeaderText(null);
-        alert.setContentText("Cập nhật kho hàng thành công.");
-        alert.showAndWait();
+        Main.ShowConfirmation("Cập nhật kho hàng thành công.","Xác nhận");
     }
 }

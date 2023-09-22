@@ -1,19 +1,16 @@
 package com.example.cafe_management;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;// For listen to Enter key from keyboard
+import javafx.scene.input.KeyEvent;//
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 public class LoginController {
     @FXML
@@ -22,8 +19,6 @@ public class LoginController {
     @FXML
     private PasswordField passwordTextField;
 
-    public static Connection connection;
-    
     public static class UserData {
         private int id;
         String accountName;
@@ -87,15 +82,33 @@ public class LoginController {
     // Store logged-in user data
     public static UserData loggedInUserData;
 
-    public void setDatabaseConnection(Connection connection) {
-        this.connection = connection;
+    @FXML
+    private void initialize() {
+        //Enter = LoginButton
+        // Initialize the Enter key press event handler for usernameTextField
+        usernameTextField.setOnKeyPressed(this::handleKeyPress);
+        // Initialize the Enter key press event handler for passwordTextField
+        passwordTextField.setOnKeyPressed(this::handleKeyPress);
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            // The "Enter" key was pressed, so trigger the loginButtonClicked() method
+            try {
+                loginButtonClicked();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
-    private void loginButtonClicked() {
+    private void loginButtonClicked() throws IOException {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
 
+
+        Connection connection = DatabaseUtil.connect();
         if (connection != null) {
             try {
                 // Prepare a SQL statement to check username and password
@@ -124,31 +137,18 @@ public class LoginController {
                     loggedInUserData = new UserData(id, accountName, username, password,
                             permission, tel, email, identity, usualSchedule, hourPayment);
 
-                    // Load the new FXML file and set it as the new scene
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("E_Menu.fxml"));
-                    Parent root = loader.load();
-                    E_MenuController controller = loader.getController();
-
-                    // Set the connection in E_MenuController
-                    controller.setConnection(connection);
-
-                    Scene scene = new Scene(root);
-
-                    Stage stage = (Stage) usernameTextField.getScene().getWindow();
-                    stage.setScene(scene);
-                    stage.show();
+                    // Load the E_Menu.fxml file
+                    Main.loadScene("E_Menu.fxml");
                 } else {
                     // Login failed
                     System.out.println("Login failed!");
                     // Add code to display an error message or handle login failure
-                    Alert loginFailAlert = new Alert(Alert.AlertType.ERROR);
-                    loginFailAlert.setTitle("Login failed");
-                    loginFailAlert.setContentText("Please check again username and password");
-                    loginFailAlert.showAndWait();
+                    Main.ShowWarning("Please check again username and password","Login failed");
                 }
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
 }
+

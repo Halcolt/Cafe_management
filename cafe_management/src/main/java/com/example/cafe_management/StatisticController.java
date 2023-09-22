@@ -2,10 +2,7 @@ package com.example.cafe_management;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,9 +20,6 @@ public class StatisticController implements Initializable {
 
     @FXML
     private ListView<String> StockLists;
-
-    @FXML
-    private Button ReturnButton;
 
     private Connection connection;
     public void setConnection(Connection connection) {
@@ -94,9 +88,7 @@ public class StatisticController implements Initializable {
 
     @FXML
     private void handleReturnButton() {
-        // Close the current stage (scene)
-        Stage stage = (Stage) ReturnButton.getScene().getWindow();
-        stage.close();
+        Main.loadScene("E_Menu.fxml");
     }
 
     @FXML
@@ -107,7 +99,7 @@ public class StatisticController implements Initializable {
         float orderTotal = calculateOrderTotal(oneMonthAgo, currentDate);
         float stockTotal = calculateStockTotal(oneMonthAgo, currentDate);
 
-        showNotification(String.format("Total Order Amount in Last Month: %.2f\nTotal Stock Amount in Last Month: %.2f", orderTotal, stockTotal));
+        Main.ShowConfirmation(String.format("Total Order Amount in Last Month: %.2f\nTotal Stock Amount in Last Month: %.2f", orderTotal, stockTotal),null);
     }
 
     private float calculateOrderTotal(LocalDate startDate, LocalDate endDate) {
@@ -142,14 +134,6 @@ public class StatisticController implements Initializable {
             e.printStackTrace();
         }
         return 0.0f;
-    }
-
-    private void showNotification(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Monthly Statistics");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }
 

@@ -4,11 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,18 +25,6 @@ public class EditMenuController implements Initializable {
 
     @FXML
     private TextField PriceTextField;
-
-    @FXML
-    private Button returnButton;
-
-    @FXML
-    private Button confirmButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button addToMenuButton;
 
     private Connection connection;
 
@@ -75,7 +60,6 @@ public class EditMenuController implements Initializable {
                 menuItems.add(String.format("%s - %.2f", item, price));
             }
         }
-
         menuListView.setItems(menuItems);
     }
 
@@ -112,13 +96,11 @@ public class EditMenuController implements Initializable {
                     System.out.println("Item deleted successfully.");
                 } else {
                     System.out.println("Item deletion failed.");
-                    showAlert("Item Deletion Failed", "Failed to delete item: " + itemName, Alert.AlertType.ERROR);
                 }
             }
         }
         pendingDeletions.clear();
 
-        // Add new items to the database
         for (String item : pendingAdditions) {
             String[] parts = item.split(" - ");
             if (parts.length == 2) {
@@ -128,19 +110,17 @@ public class EditMenuController implements Initializable {
                     System.out.println("Item added successfully.");
                 } else {
                     System.out.println("Item addition failed.");
-                    showAlert("Item Addition Failed", "Failed to add item: " + itemName, Alert.AlertType.ERROR);
+                    Main.ShowWarning("Thêm món thất bại",null);
                 }
             }
         }
         pendingAdditions.clear();
-
         // Show a success alert
-        showAlert("Update Successful", "Menu updated successfully.", Alert.AlertType.INFORMATION);
+        Main.ShowConfirmation("Thay đổi Menu thành công",null);
     }
 
     private boolean deleteMenuItem(String itemName) {
-        String deleteQuery = "DELETE FROM menu WHERE item = ?";
-        try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM menu WHERE item = ?")) {
             statement.setString(1, itemName);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted > 0;
@@ -151,8 +131,7 @@ public class EditMenuController implements Initializable {
     }
 
     private boolean addMenuItem(String itemName, float itemPrice) {
-        String insertQuery = "INSERT INTO menu (item, price) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO menu (item, price) VALUES (?, ?)")) {
             statement.setString(1, itemName);
             statement.setFloat(2, itemPrice);
 
@@ -166,15 +145,7 @@ public class EditMenuController implements Initializable {
 
     @FXML
     private void handleReturnButton() {
-        Stage stage = (Stage) returnButton.getScene().getWindow();
-        stage.close();
+        Main.loadScene("E_Menu.fxml");
     }
 
-    private void showAlert(String title, String content, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 }

@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+
 
 import java.sql.*;
 import java.io.IOException;
@@ -46,7 +46,6 @@ public class CreateOrderController {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-
         // Set up a listener for the delete button
         deleteButton.setOnAction(event -> deleteSelectedItemFromCart());
     }
@@ -56,7 +55,6 @@ public class CreateOrderController {
         String selectedItem = itemComboBox.getSelectionModel().getSelectedItem();
         int orderAmount = Integer.parseInt(amountTextField.getText());
         int totalPrice = calculateTotalPrice(selectedItem, orderAmount);
-
         // Create an HBox to hold the cart item and delete button
         HBox cartItemBox = new HBox();
         Label cartItemLabel = new Label(selectedItem + " x" + orderAmount + " - $" + totalPrice);
@@ -80,7 +78,6 @@ public class CreateOrderController {
     @FXML
     private void createOrderButtonClicked() {
         String username = LoginController.loggedInUserData.getUsername();
-
         for (HBox cartItemBox : cartItems) {
             String cartItemText = ((Label) cartItemBox.getChildren().get(0)).getText();
             String[] parts = cartItemText.split(" x| - \\$");
@@ -94,30 +91,17 @@ public class CreateOrderController {
                 e.printStackTrace();
             }
         }
-
         cartItems.clear();
         cartListView.setItems(cartItems);
         totalOrderPrice = 0;
         updateTotalPriceLabel();
-        showSuccessNotification("Order Successful", "Your order has been placed successfully.");
+        Main.ShowConfirmation("Tạo đơn hàng thành công","Xác nhận");
     }
 
-    private void showSuccessNotification(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
 
-        // Get the current window and set the alert's owner to center it on the window
-        Stage stage = (Stage) itemComboBox.getScene().getWindow();
-        alert.initOwner(stage);
-
-        alert.showAndWait();
-    }
     @FXML
     private void returnButtonClicked() {
-        Stage stage = (Stage) itemComboBox.getScene().getWindow();
-        stage.close();
+        Main.loadScene("E_Menu.fxml" );
     }
 
     private List<String> fetchMenuItems() throws SQLException {
@@ -139,7 +123,6 @@ public class CreateOrderController {
         int totalPrice = 0;
         try {
             String sql = "SELECT price FROM menu WHERE item = ?";
-
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, item);
 
@@ -153,7 +136,6 @@ public class CreateOrderController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return totalPrice;
     }
 

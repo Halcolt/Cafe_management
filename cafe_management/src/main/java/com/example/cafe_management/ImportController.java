@@ -2,19 +2,16 @@ package com.example.cafe_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +34,6 @@ public class ImportController {
 
     private Connection connection;
     private String username;
-
-    private PreparedStatement fetchAmountStatement;
-    private PreparedStatement updateStatement;
-    private PreparedStatement insertStatement;
 
     @FXML
     private void initialize() {
@@ -101,8 +94,7 @@ public class ImportController {
 
     @FXML
     private void returnButtonClicked() {
-        Stage stage = (Stage) ItemComboBox.getScene().getWindow();
-        stage.close();
+       Main.loadScene("E_Menu.fxml");
     }
 
     @FXML
@@ -121,7 +113,6 @@ public class ImportController {
         }
     }
 
-
     private void clearInputFields() {
         ItemComboBox.setValue(null);
         unitTextfield.clear();
@@ -130,10 +121,7 @@ public class ImportController {
     }
 
     private void showInputErrorAlert() {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setTitle("Lỗi");
-        errorAlert.setContentText("Vui lòng điền đầy đủ thông tin nhập hàng");
-        errorAlert.showAndWait();
+        Main.ShowWarning("Vui lòng điền đầy đủ thông tin nhập hàng",null);
     }
 
     @FXML
@@ -142,14 +130,6 @@ public class ImportController {
         if (selectedIndex >= 0) {
             cartListView.getItems().remove(selectedIndex);
         }
-    }
-
-    private void showNoItemSelectedAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Lỗi");
-        alert.setHeaderText(null);
-        alert.setContentText("Vui lòng chọn một mục để xóa.");
-        alert.showAndWait();
     }
 
     @FXML
@@ -180,31 +160,20 @@ public class ImportController {
     }
 
     @FXML
-    private void NewMaterial(ActionEvent event) throws IOException {
+    private void NewMaterial() {
         int currentperrmision = LoginController.loggedInUserData.getPermission();
         // Load the NewMaterial.fxml file and create a new stage for it
         if (currentperrmision < 4) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("NewMaterial.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Mặt hàng mới");
-            stage.setScene(new Scene(root));
-
-            stage.show();
+            Main.loadScene("NewMaterial.fxml");
         } else {
-            Alert NoPermission = new Alert(Alert.AlertType.ERROR);
-            NoPermission.setTitle("No Permission");
-            NoPermission.setContentText("Tài khoản không thể dùng chức năng này");
-            NoPermission.showAndWait();
+            Main.ShowWarning("Tài khoản không thể dùng chức năng này","No Permission");
         }
-
-
     }
 
     private void updateStockTable(String ingredient,  float newAmount) {
         String updateSql = "UPDATE stock SET amount = ? WHERE ingredient = ?";
         try {
-            updateStatement = connection.prepareStatement(updateSql);
+            PreparedStatement updateStatement = connection.prepareStatement(updateSql);
             updateStatement.setFloat(1, newAmount);
             updateStatement.setString(2, ingredient);
             updateStatement.executeUpdate();
@@ -216,7 +185,7 @@ public class ImportController {
     private float fetchCurrentAmount(String ingredient) {
         float currentAmount = 0;
         try {
-            fetchAmountStatement = connection.prepareStatement("SELECT amount FROM stock WHERE ingredient = ?");
+            PreparedStatement fetchAmountStatement = connection.prepareStatement("SELECT amount FROM stock WHERE ingredient = ?");
             fetchAmountStatement.setString(1, ingredient);
             ResultSet amountResultSet = fetchAmountStatement.executeQuery();
             if (amountResultSet.next()) {
@@ -231,7 +200,7 @@ public class ImportController {
     private void insertStockChange(String username, java.sql.Date changeDate, java.sql.Time changeTime, String ingredient, String unit, float quantity, String price, float currentAmount, float newAmount) {
         String insertSql = "INSERT INTO stock_change (username, changedate, changetime, ingredient, unit, old_amount, new_amount, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            insertStatement = connection.prepareStatement(insertSql);
+            PreparedStatement insertStatement = connection.prepareStatement(insertSql);
             insertStatement.setString(1, username);
             insertStatement.setDate(2, changeDate);
             insertStatement.setTime(3, changeTime);
@@ -248,18 +217,6 @@ public class ImportController {
     }
 
     private void showConfirmationAlert() {
-        Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
-        confirmationAlert.setTitle("Xác nhận");
-        confirmationAlert.setHeaderText(null);
-        confirmationAlert.setContentText("Nhập hàng đã được xác nhận và cập nhật.");
-        confirmationAlert.showAndWait();
-    }
-
-    private void showUsernameErrorAlert() {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setTitle("Lỗi");
-        errorAlert.setHeaderText(null);
-        errorAlert.setContentText("Không thể xác định tên người dùng.");
-        errorAlert.showAndWait();
+        Main.ShowConfirmation("Nhập hàng đã được xác nhận và cập nhật.",null);
     }
 }

@@ -1,13 +1,8 @@
 package com.example.cafe_management;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -57,7 +52,7 @@ public class InformationController {
 
     private void loadUserInfo() {
         // Connect to the database using DatabaseUtil
-        Connection connection = null;
+        Connection connection ;
         try {connection = DatabaseUtil.connect();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -95,11 +90,7 @@ public class InformationController {
 
         return_button.setOnAction(event -> {
             // Load the previous scene (Choose User scene)
-            try {
-                loadChooseUserScene();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Main.loadScene("ChooseUser.fxml");
         });
 
         info_modify.setOnAction(event -> {
@@ -117,18 +108,13 @@ public class InformationController {
     }
 
     private String getPermissionLabel(int permissionValue) {
-        switch (permissionValue) {
-            case 1:
-                return "Admin";
-            case 2:
-                return "CEO";
-            case 3:
-                return "Manager";
-            case 4:
-                return "Employee";
-            default:
-                return "Unknown";
-        }
+        return switch (permissionValue) {
+            case 1 -> "Admin";
+            case 2 -> "CEO";
+            case 3 -> "Manager";
+            case 4 -> "Employee";
+            default -> "Unknown";
+        };
     }
 
     private void updateUserInformation() {
@@ -141,7 +127,7 @@ public class InformationController {
         String updatedHourPayment = hour_paymentTextField.getText();
 
         // Connect to the database using DatabaseUtil
-        Connection connection = null;
+        Connection connection;
         try {
             connection = DatabaseUtil.connect();
         } catch (IOException e) {
@@ -179,17 +165,7 @@ public class InformationController {
         }
     }
 
-    private void loadChooseUserScene() throws IOException {
-        // Load the Choose User scene
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ChooseUser.fxml"));
-        Stage stage = (Stage) return_button.getScene().getWindow();
-        stage.setScene(new Scene(loader.load()));
-    }
-
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
+        Main.ShowConfirmation(content,title);
     }
 }

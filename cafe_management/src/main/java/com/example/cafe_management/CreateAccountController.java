@@ -3,11 +3,9 @@ package com.example.cafe_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -63,7 +61,6 @@ public class CreateAccountController {
         permissionComboBox.setItems(permissionItems);
     }
 
-
     @FXML
     private void createAccountButtonClicked() {
         // Retrieve input values
@@ -79,16 +76,11 @@ public class CreateAccountController {
 
         // Validate required fields
         if (accountName.isEmpty() || password.isEmpty() || permissionText == null || username.isEmpty()) {
-            showAlert("All fields marked with * are required.");
+            Main.ShowWarning("Cần điền đầy đủ thông tin trường có dấu (*)","Lỗi");
             return;
         }
 
         int permission = convertPermission(permissionText);
-
-        if (permission == -1) {
-            showAlert("Invalid permission value. Please select 'CEO', 'Manager', or 'Employee'.");
-            return;
-        }
 
         // Perform database insert
         try (Connection connection = DatabaseUtil.connect()) {
@@ -112,12 +104,11 @@ public class CreateAccountController {
                     int affectedRows = statement.executeUpdate();
 
                     if (affectedRows > 0) {
-                        showAlert("Account created successfully.");
-                        clearFields();
+                        Main.ShowConfirmation("Tạo tài khoản thành công",null);
                         // Change back to the previous scene (you may need to implement this)
-                        returnToPreviousScene();
+                        Main.loadScene("ChooseUser.fxml");
                     } else {
-                        showAlert("Failed to create the account.");
+                        Main.ShowWarning("Lỗi tạo tài khoản",null);
                     }
                 }
             }
@@ -136,29 +127,8 @@ public class CreateAccountController {
         };
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Create Account");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void clearFields() {
-        // Clear input fields after successful account creation
-        AccountNameTextField.clear();
-        PasswordsTextField.clear();
-        permissionComboBox.getSelectionModel().clearSelection();
-        telTextField.clear();
-        emailTextField.clear();
-        identityTextField.clear();
-        usual_scheduleTextField.clear();
-        hour_paymentTextField.clear();
-        UsernameTextField.clear();
-    }
     @FXML
     private void returnToPreviousScene() {
-        Stage stage = (Stage) AccountNameTextField.getScene().getWindow();
-        stage.close();
+        Main.loadScene("ChooseUser.fxml");
     }
 }

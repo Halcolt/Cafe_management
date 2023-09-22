@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+
 public class E_MenuController {
     @FXML
     private Button PersonalInfo;
@@ -25,6 +26,11 @@ public class E_MenuController {
 
     @FXML
     private Button EditMenu;
+
+    private Connection connection;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     private int currentpermission = LoginController.loggedInUserData.getPermission();
     @FXML

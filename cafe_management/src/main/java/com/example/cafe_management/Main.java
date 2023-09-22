@@ -23,6 +23,7 @@ public class Main extends Application {
         loadScene("login.fxml");
     }
 
+
     public static void loadScene(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));

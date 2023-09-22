@@ -42,7 +42,7 @@ public class ChooseUserController {
         usersWithHigherPermission.add(new UserInfo(currentUserData.getAccountName(), currentUserData.getPermission()));
 
         // Set a custom cell factory for the userListView
-        userListView.setCellFactory(param -> new ListCell<UserInfo>() {
+        userListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(UserInfo userInfo, boolean empty) {
                 super.updateItem(userInfo, empty);
@@ -59,7 +59,7 @@ public class ChooseUserController {
 
         returnButton.setOnAction(event -> {
             // Load the E_menu scene
-            loadEMenuScene();
+            Main.loadScene("E_Menu.fxml");
         });
 
         chooseButton.setOnAction(event -> {
@@ -95,22 +95,6 @@ public class ChooseUserController {
 
             // Get the current window and set the scene
             Stage stage = (Stage) CreateAccountButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadEMenuScene() {
-        try {
-            // Load the E_menu scene
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("E_menu.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-
-            // Get the current window and set the scene
-            Stage stage = (Stage) returnButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

@@ -16,7 +16,7 @@ public class DatabaseUtil {
         String database = null;
         String username = null;
         String password = null;
-        String location = null; // this is not use yet but this is for to know where the account is login
+        String location = null; // this is not used yet but this is for knowing where the account is logged in
 
         try (BufferedReader br = new BufferedReader(new FileReader(configFilePath))) {
             String line;
@@ -48,13 +48,22 @@ public class DatabaseUtil {
         // Establish a connection
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
-
-            // Connection successful
             System.out.println("Connected to the database successfully!");
             return connection;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void disconnect(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+                System.out.println("Disconnected from the database.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

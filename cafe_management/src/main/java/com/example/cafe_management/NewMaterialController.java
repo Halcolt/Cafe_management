@@ -3,12 +3,9 @@ package com.example.cafe_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,15 +13,11 @@ import java.sql.SQLException;
 
 
 public class NewMaterialController {
-
     @FXML
     private ComboBox<String> unitComboBox;
 
-
     @FXML
     private TextField materialNameTextField;
-    @FXML
-    private Button returnButton;
 
     private Connection connection;
 
@@ -71,12 +64,12 @@ public class NewMaterialController {
         } else {
             // Handle missing input
             System.out.println("Please enter both material name and select a unit.");
+            // Add Alert
         }
     }
 
     private void populateUnitComboBox() throws SQLException {
         ObservableList<String> units = FXCollections.observableArrayList();
-
         // Query the database to retrieve unit data
         String query = "SELECT unit FROM measurement";
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -87,14 +80,12 @@ public class NewMaterialController {
                 units.add(unit);
             }
         }
-
         unitComboBox.setItems(units);
     }
 
     @FXML
-    private void handleReturnButton() throws IOException {
+    private void handleReturnButton() {
         // Close the current stage (scene)
-        Stage stage = (Stage) returnButton.getScene().getWindow();
-        stage.close();
+        Main.loadScene("Import.fxml");
     }
 }

@@ -22,8 +22,9 @@ public class LoginController {
     @FXML
     private PasswordField passwordTextField;
 
-    public static Connection connection;
-    
+    private Connection connection;
+
+    // UserData class to store user data
     public static class UserData {
         private int id;
         String accountName;
@@ -128,10 +129,6 @@ public class LoginController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("E_Menu.fxml"));
                     Parent root = loader.load();
                     E_MenuController controller = loader.getController();
-
-                    // Set the connection in E_MenuController
-                    controller.setConnection(connection);
-
                     Scene scene = new Scene(root);
 
                     Stage stage = (Stage) usernameTextField.getScene().getWindow();

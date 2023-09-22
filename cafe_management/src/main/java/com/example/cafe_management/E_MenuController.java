@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 public class E_MenuController {
     @FXML
@@ -33,11 +32,6 @@ public class E_MenuController {
 
     @FXML
     private Button EditMenu;
-
-    private Connection connection;
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
 
     private int currentpermission = LoginController.loggedInUserData.getPermission();
     private Stage currentStage;

@@ -53,6 +53,8 @@ public class NewMaterialController {
                     if (rowsInserted > 0) {
                         // Data inserted successfully
                         System.out.println("Data inserted successfully into stock table.");
+                        materialNameTextField.clear();
+                        unitComboBox.setValue(null);
                     } else {
                         // Handle insertion failure
                         System.out.println("Failed to insert data into stock table.");
@@ -85,7 +87,6 @@ public class NewMaterialController {
 
     @FXML
     private void handleReturnButton() {
-        // Close the current stage (scene)
         Main.loadScene("Import.fxml");
     }
 }

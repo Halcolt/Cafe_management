@@ -133,7 +133,7 @@ public class ImportController {
     }
 
     @FXML
-    private void handleConfirm() {
+    private void handleConfirm() throws IOException {
         java.util.Date currentDate = new java.util.Date();
         java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
         java.sql.Time sqlTime = new java.sql.Time(currentDate.getTime());
@@ -143,7 +143,7 @@ public class ImportController {
             if (parts.length == 3) {
                 String ingredient = parts[0];
                 String quantityUnit = parts[1];
-                String price = parts[2].replace("Price: ", "");
+                float price = Float.parseFloat(parts[2].replace("Price: ", ""));
                 String[] quantityParts = quantityUnit.split(" ");
                 if (quantityParts.length == 2) {
                     String unit = quantityParts[1];
@@ -151,7 +151,7 @@ public class ImportController {
                     float currentAmount = fetchCurrentAmount(ingredient);
                     float newAmount = currentAmount + quantity;
                     updateStockTable(ingredient,  newAmount);
-                    insertStockChange(username, sqlDate, sqlTime, ingredient, unit, quantity, price, currentAmount, newAmount);
+                    Main.insertStockChange(username, sqlDate, sqlTime, ingredient, unit, quantity, price, currentAmount, newAmount);
                 }
             }
         }
@@ -195,25 +195,6 @@ public class ImportController {
             e.printStackTrace();
         }
         return currentAmount;
-    }
-
-    private void insertStockChange(String username, java.sql.Date changeDate, java.sql.Time changeTime, String ingredient, String unit, float quantity, String price, float currentAmount, float newAmount) {
-        String insertSql = "INSERT INTO stock_change (username, changedate, changetime, ingredient, unit, old_amount, new_amount, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement insertStatement = connection.prepareStatement(insertSql);
-            insertStatement.setString(1, username);
-            insertStatement.setDate(2, changeDate);
-            insertStatement.setTime(3, changeTime);
-            insertStatement.setString(4, ingredient);
-            insertStatement.setString(5, unit);
-            insertStatement.setFloat(6, currentAmount);
-            insertStatement.setFloat(7, newAmount);
-            insertStatement.setFloat(8, quantity);
-            insertStatement.setFloat(9, Float.parseFloat(price));
-            insertStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     private void showConfirmationAlert() {

@@ -157,7 +157,7 @@ public class CheckStockController {
     }
 
     @FXML
-    private void handleConfirm() {
+    private void handleConfirm() throws IOException {
         java.util.Date currentDate = new java.util.Date();
         java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
         java.sql.Time sqlTime = new java.sql.Time(currentDate.getTime());
@@ -174,7 +174,7 @@ public class CheckStockController {
                 float newAmount = Float.parseFloat(newAmountStr);
 
                 // Insert into stock_change with quantity as NULL and price as 0
-                insertStockChange(username, sqlDate, sqlTime, ingredient, unit, oldAmount, newAmount);
+                Main.insertStockChange(username, sqlDate, sqlTime, ingredient, unit,0,0, oldAmount, newAmount);
 
                 // Update the amount in the stock table
                 updateStockTable(ingredient, newAmount);
@@ -182,24 +182,6 @@ public class CheckStockController {
         }
         cartListView.getItems().clear();
         showConfirmationAlert();
-    }
-
-    // Define the insertStockChange method to insert data into stock_change table
-    private void insertStockChange(String username, java.sql.Date date, java.sql.Time time, String ingredient, String unit, float oldAmount, float newAmount) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO stock_change (username, changedate, changetime, ingredient, unit, old_amount, new_amount, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, username);
-            statement.setDate(2, date);
-            statement.setTime(3, time);
-            statement.setString(4, ingredient);
-            statement.setString(5, unit);
-            statement.setFloat(6, oldAmount);
-            statement.setFloat(7, newAmount);
-            statement.setFloat(8, 0);
-            statement.setFloat(9, 0);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     // Define the updateStockTable method to update the amount in the stock table

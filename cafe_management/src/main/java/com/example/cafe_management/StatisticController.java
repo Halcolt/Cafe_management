@@ -22,20 +22,19 @@ public class StatisticController implements Initializable {
     private ListView<String> StockLists;
 
     private Connection connection;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            try {
-                connection = DatabaseUtil.connect();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            connection = DatabaseUtil.connect();
             if (connection != null) {
                 populateOrderLists();
                 populateStockLists();
             }
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }

@@ -4,4 +4,6 @@ The idea is to help small and average coffee shop to manage there shop from impo
 
 The project design is very rough and need some more improvement in the future 
 
+How to use: https://youtu.be/4YOoNnFzGKc
+
 NO COPY RIGHT
